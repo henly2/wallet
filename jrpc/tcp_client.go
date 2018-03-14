@@ -40,7 +40,7 @@ func CallJRPCToTcpServer(addr string, method string, params string, res *string)
 // @parameter: params string
 // @parameter: res *string
 // @return: error
-func CallJRPCToTcpServerOnClient(client *rpc.Client, addr string, method string, params string, res *string) error {
+func CallJRPCToTcpServerOnClient(client *rpc.Client, method string, params string, res *string) error {
 	err := client.Call(method, params, res)
 	if err != nil {
 		log.Println("Error: ", err.Error())

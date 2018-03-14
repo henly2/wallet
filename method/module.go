@@ -19,6 +19,7 @@ func (m *Module) Register(req *string, res * string) error {
 	log.Println("Module register: ", *req)
 
 	if m.Instance == nil {
+		log.Println("Module interface is nil")
 		return errors.New("Module interface is nil")
 	}
 	m.Instance.HandleRegister(req, res)
@@ -28,7 +29,8 @@ func (m *Module) Register(req *string, res * string) error {
 func (m *Module) Dispatch(req *string, res * string) error {
 	log.Println("Module dispath : ", *req)
 
-	if m.Instance==nil {
+	if m.Instance == nil {
+		log.Println("Module interface is nil")
 		return errors.New("Module interface is nil")
 	}
 	m.Instance.HandleDispatch(req, res)
@@ -38,7 +40,8 @@ func (m *Module) Dispatch(req *string, res * string) error {
 func (m *Module) Call(req *string, res * string) error {
 	log.Println("Module call : ", *req)
 
-	if m.Instance==nil {
+	if m.Instance == nil {
+		log.Println("Module interface is nil")
 		return errors.New("Module interface is nil")
 	}
 	m.Instance.HandleCall(req, res)
