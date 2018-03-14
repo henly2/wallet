@@ -4,53 +4,37 @@ import (
 	"net/rpc"
 	"net"
 	"log"
-	"fmt"
 )
 
-// port like: ":8080"
-func StartTcpServer(port string) error{
-	log.Println("Tcp jrpc server start to create...")
+// Start a JRPC tcp server
+// @parameter: port string, like: ":8080"
+// @return: error
+func StartJRPCTcpServer(port string) error{
+	log.Println("Start JRPC Tcp server...", port)
 
 	addr, err := net.ResolveTCPAddr("tcp", port)
 	if err != nil {
-		log.Printf("Tcp jrpc server failed to ResolveTCPAddr ", err.Error())
+		log.Println("Error: ", err.Error())
 		return err;
 	}
 
 	listener, err := net.ListenTCP("tcp", addr)
 	if err != nil {
-		log.Printf("Tcp jrpc server failed to start ", err.Error())
+		log.Println("Error: ", err.Error())
 		return err;
 	}
 
-	log.Println("Tcp jrpc server successful listen...", addr)
+	log.Println("Start JRPC Tcp server successfully, listen on port: ", addr)
 	for{
 		conn, err := listener.Accept();
 		if err != nil {
-			log.Printf("Fatal error: ", err.Error())
+			log.Println("Error: ", err.Error())
 			continue
 		}
 
+		log.Println("JRPC Tcp server Accept a client: ", conn.RemoteAddr())
 		go rpc.ServeConn(conn)
 	}
 
 	return nil;
-}
-
-func StartTcpClient(addr string, method string, params string, res *string) error {
-	client, err := rpc.Dial("tcp", addr)
-	if err != nil {
-		log.Printf("Fatal error: ", err.Error())
-		return err
-	}
-	defer client.Close()
-
-	err = client.Call(method, params, res)
-	if err != nil {
-		log.Printf("call failed: ", err.Error())
-		return err
-	}
-
-	fmt.Printf("Reply: %s\n", *res)
-	return nil
 }

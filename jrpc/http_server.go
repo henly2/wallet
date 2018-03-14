@@ -6,6 +6,7 @@ import (
 	"log"
 	"bytes"
 	"net/rpc/jsonrpc"
+	"net"
 )
 
 // rpcRequest represents a RPC request.
@@ -14,13 +15,6 @@ type rpcRequest struct {
 	r    io.Reader     // holds the JSON formated RPC request
 	rw   io.ReadWriter // holds the JSON formated RPC response
 	done chan bool     // signals then end of the RPC request
-}
-
-// NewRPCRequest returns a new rpcRequest.
-func NewRPCRequest(r io.Reader) *rpcRequest {
-	var buf bytes.Buffer
-	done := make(chan bool)
-	return &rpcRequest{r, &buf, done}
 }
 
 // Read implements the io.ReadWriteCloser Read method.
@@ -46,21 +40,32 @@ func (r *rpcRequest) Call() io.Reader {
 	return r.rw
 }
 
-func StartHttpServer(port string) error {
-	log.Println("Http jrpc server start to create...")
+// NewRPCRequest returns a new rpcRequest.
+func NewRPCRequest(r io.Reader) *rpcRequest {
+	var buf bytes.Buffer
+	done := make(chan bool)
+	return &rpcRequest{r, &buf, done}
+}
+
+// Start a JRPC Http Server
+// @parameter: port string, like ":8080"
+// @return: error
+func StartJRPCHttpServer(port string) error {
+	log.Println("Start JRPC Http server...", port)
 
 	http.HandleFunc("/", func(w http.ResponseWriter, req *http.Request) {
+		log.Println("JRPC Http server Accept a client: ", req.RemoteAddr)
+
 		defer req.Body.Close()
 		w.Header().Set("Content-Type", "application/json")
 		res := NewRPCRequest(req.Body).Call()
 		io.Copy(w, res)
 	})
 
-	log.Println("Http jrpc server start to listen ", port)
+	log.Println("Start JRPC Http server successfully, listen on port: ", port)
 	err := http.ListenAndServe(port, nil)
 	if err != nil {
-		log.Fatal("Http jrpc server failed to start ", err.Error())
-
+		log.Println("Error: ", err.Error())
 		return err
 	}
 
