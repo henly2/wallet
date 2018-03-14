@@ -6,7 +6,6 @@ import (
 	"log"
 	"bytes"
 	"net/rpc/jsonrpc"
-	"net"
 )
 
 // rpcRequest represents a RPC request.

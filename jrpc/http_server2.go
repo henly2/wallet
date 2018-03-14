@@ -18,13 +18,13 @@ func StartJRPCHttpServer2(port string) error {
 		return err
 	}
 
+	log.Println("Start JRPC Http server successfully, listen on port: ", port)
+
 	err = http.Serve(listener, nil)
 	if err != nil {
 		log.Println("Error: ", err.Error())
 		return err
 	}
-
-	log.Println("Start JRPC Http server successfully, listen on port: ", port)
 
 	return nil
 }

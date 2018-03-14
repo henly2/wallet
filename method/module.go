@@ -5,16 +5,42 @@ import(
 	"errors"
 )
 
-type Module struct{
-	Handle func(*string, *string)error
+type ModuleInterface interface {
+	HandleRegister(*string, *string)error
+	HandleDispatch(*string, *string)error
+	HandleCall(*string, *string)error
 }
 
-func (m *Module) Dispath(req *string, res * string) error {
-	log.Println("client call module : ", *req)
+type Module struct{
+	Instance ModuleInterface
+}
 
-	if m.Handle==nil {
-		return errors.New("Module Handle is nil")
+func (m *Module) Register(req *string, res * string) error {
+	log.Println("Module register: ", *req)
+
+	if m.Instance == nil {
+		return errors.New("Module interface is nil")
 	}
-	m.Handle(req, res)
+	m.Instance.HandleRegister(req, res)
+	return nil;
+}
+
+func (m *Module) Dispatch(req *string, res * string) error {
+	log.Println("Module dispath : ", *req)
+
+	if m.Instance==nil {
+		return errors.New("Module interface is nil")
+	}
+	m.Instance.HandleDispatch(req, res)
+	return nil;
+}
+
+func (m *Module) Call(req *string, res * string) error {
+	log.Println("Module call : ", *req)
+
+	if m.Instance==nil {
+		return errors.New("Module interface is nil")
+	}
+	m.Instance.HandleCall(req, res)
 	return nil;
 }

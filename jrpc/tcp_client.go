@@ -28,8 +28,8 @@ func CallJRPCToTcpServer(addr string, method string, params string, res *string)
 		return err
 	}
 
-	fmt.Println("Params: %s\n", params)
-	fmt.Println("Reply: %s\n", *res)
+	fmt.Println("Params: ", params)
+	fmt.Println("Reply: ", *res)
 	return nil
 }
 
@@ -47,7 +47,7 @@ func CallJRPCToTcpServerOnClient(client *rpc.Client, addr string, method string,
 		return err
 	}
 
-	fmt.Println("Params: %s\n", params)
-	fmt.Println("Reply: %s\n", *res)
+	fmt.Println("Params: ", params)
+	fmt.Println("Reply: ", *res)
 	return nil
 }
